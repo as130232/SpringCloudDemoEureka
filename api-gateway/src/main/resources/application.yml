@@ -1,0 +1,68 @@
+#設定路由與服務的映射，但也可以忽略，zuul有自動映射路由功能，預設是服務名 
+#zuul: 
+#  routes:
+#    feign-consumer: /feign-consumer/**
+#    edm-service: /edm-service/**
+      
+#設定不需要自動映射的服務路由
+#zuul.ignored-services=XXX
+
+zuul:
+  ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
+  host:
+    socket-timeout-millis: 60000 
+    connect-timeout-millis: 60000
+  routes:
+    service-notify:
+      path: /**
+      url: http://127.0.0.1:9161
+      customSensitiveHeaders: true
+  ws:
+    brokerages:
+      service-notify:
+        end-points: /notify-websocket
+        brokers:  /chat
+        destination-prefixes: /app
+
+
+#設定上傳檔案上限大小
+spring:
+  servlet: 
+    multipart:
+      enabled: true
+      max-file-size: 1024Mb
+      max-request-size: 1024Mb
+#設置上傳臨時文件地址  
+server: 
+    tomcat: 
+        basedir: /data/tmp
+              
+#針對個別微服務(檔案上傳)延後超時時間，上傳檔案需要時間，設定為兩分鐘
+#ftp-service:
+#  ribbon:
+#    ReadTimeout: 90000
+#    ConnectTimeout: 90000
+#針對個別微服務(檔案上傳)延後超時時間，上傳檔案需要時間，設定為兩分鐘
+#cnccam-service:
+#  ribbon:
+#    ReadTimeout: 90000
+#    ConnectTimeout: 90000
+    
+# the Ribbon read and connect timeout 是一個總時間為(ConnectTimeout + ReadTimeout) * 2
+ribbon:
+  ConnectTimeout: 60000 #設置路由轉發請求時，創建求連結的超時時間
+  ReadTimeout: 90000   #設置路由轉發請求的超時時間
+  
+  
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 200000 #設置API網關中路由轉發請求的HystrixCommand執行的超時時間，時間必須大於ribbonTimeout的超時時間，否則hystrix熔斷了以後，ribbon的重試就都沒有意義了
+#            ribbon: 
+#              ConnectTimeout: 5000
+#              ReadTimeout: 10000

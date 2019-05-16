@@ -1,0 +1,9 @@
+#jwt
+jwt: 
+  secret: jerrylovecimforce
+  token-validity-in-seconds: 86400 #有效時間 24 hour
+  #token-validity-in-seconds: 10800 #有效時間 3 hour
+  refresh-exp-in-seconds: 7200 #刷新token延長時間 2 hour
+
+
+

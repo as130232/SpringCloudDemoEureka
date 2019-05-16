@@ -1,0 +1,23 @@
+server: 
+  port: 8761
+
+spring: 
+  application: 
+    name: eureka-server
+#  security:
+#    user:
+#      name: mes
+#      password: mes123
+      
+eureka:
+  instance:
+    instanceId: ${spring.application.name}:${server.port}:${random.int}
+    hostname: localhost #應用的主機名稱
+  client: 
+    fetch-registry: false #值為false意味著無需註冊自身
+    register-with-eureka: false #值為false意味著自身僅作為服務器，不作為客戶端
+    service-url: 
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server: 
+    enable-self-preservation: false #開發模式時，關閉自我保護模式，夠迅速有效地踢出已關停的節點
+    

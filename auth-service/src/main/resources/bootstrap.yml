@@ -1,0 +1,22 @@
+#server settings
+server:
+  port: 8766
+ 
+spring: 
+  application: 
+    name: auth-service
+  datasource: 
+    url: jdbc:sqlserver://localhost;DatabaseName=CIM_USER_DB
+    username: mes
+    password: mes123
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa: 
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  cloud: 
+    config: 
+      discovery: 
+        enabled: true
+        service-id: config-server
+      profile: dev

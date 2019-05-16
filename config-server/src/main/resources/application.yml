@@ -1,0 +1,57 @@
+server:
+  port: 8765 
+  
+serviceregistry: 
+  ip: 127.0.0.1
+  #ip: 10.1.21.81
+  
+spring: 
+  application: 
+    name: config-server
+  profiles: 
+    active: native  
+#git config
+  cloud: 
+    config:
+      server:
+        native:
+          search-locations: file:///C:/config-repo/
+        #git:
+          #uri: 
+          #searchPaths: 
+          #username: 
+          #password: 
+    bus:
+      trace:
+        enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: test
+    password: test123 
+    
+#test url http://localhost:8765/config/prod
+#download into local Adding property source: file:/C:/Users/CHARLE~1.CHE/AppData/Local/Temp/config-repo-6085785373558592293/study/config-repo/config-prod.properties
+
+#開啟微服務的所有端點，包含/refresh(必須引入Actuator)
+management: 
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+eureka:
+  client: 
+    fetchRegistry: true
+    availabilityZones: 
+      default: ${APPLICATION_DOMAIN:{DOMAIN:defaultZone}}
+    serviceUrl: 
+      defaultZone: http://${serviceregistry.ip}:8761/eureka/         
+  instance: 
+    instanceId: ${spring.application.name}:${server.port}:${random.int}
+    leaseExpirationDurationInSeconds: 90
+    preferIpAddress: false
+    statusPageUrlPath: /actuator/env
+    healthCheckUrlPath: /actuator/health
+    
+    

@@ -1,0 +1,32 @@
+#server settings
+server:
+  port: 8764
+
+serviceregistry: 
+  ip: 127.0.0.1
+  #ip: 10.1.21.81
+   
+spring: 
+  application: 
+    name: api-gateway
+  cloud: 
+    config: 
+      discovery: 
+        enabled: true
+        service-id: config-server
+      profile: dev
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${serviceregistry.ip}:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instanceId: ${spring.application.name}-${spring.cloud.client.ip-address}:${server.port}:${random.int}
+    leaseExpirationDurationInSeconds: 90
+    statusPageUrlPath:  /actuator/env
+    healthCheckUrlPath: /actuator/health    
+    prefer-ip-address: true
+
+      
